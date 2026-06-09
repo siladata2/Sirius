@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SIRIUS Panel</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 16px 32px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 32px 40px;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2));
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        .welcome-banner h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: #6366f1;
+        }
+        
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-connected {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid #10b981;
+        }
+        
+        .status-disconnected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+        
+        .card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .card h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .pairing-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.15));
+            border: 2px dashed #6366f1;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .input-group {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .pair-password {
+            font-family: monospace;
+            font-size: 28px;
+            letter-spacing: 6px;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            margin: 16px 0;
+            font-weight: 800;
+            color: #10b981;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 12px 20px;
+            z-index: 1100;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .activity-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-action {
+            color: #6366f1;
+            font-weight: 500;
+        }
+        
+        .activity-time {
+            color: #64748b;
+            font-size: 12px;
+            margin-left: 12px;
+        }
+        
+        .activity-details {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .container { padding: 80px 16px 32px; }
+            .pair-password { font-size: 20px; letter-spacing: 3px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">✨ SIRIUS</div>
+            <div class="nav-links">
+                <a href="/dashboard" class="active">Dashboard</a>
+                <a href="/settings">Settings</a>
+                <a href="/profile">Profile</a>
+                <a id="adminLink" href="/admin" style="display: none;">Admin Panel</a>
+            </div>
+            <div class="user-info">
+                <span id="userName" class="avatar"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="welcome-banner">
+            <h1>Welcome back, <span id="welcomeName">User</span>! ✨</h1>
+            <p>Your personal bot control panel. Pair your device and start managing your WhatsApp bot.</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🤖</div>
+                <div class="stat-value" id="botStatus">-</div>
+                <div class="stat-label">Bot Status</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="commandsUsed">0</div>
+                <div class="stat-label">Commands Used</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💬</div>
+                <div class="stat-value" id="messagesProcessed">0</div>
+                <div class="stat-label">Messages Processed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value" id="uptime">0h</div>
+                <div class="stat-label">System Uptime</div>
+            </div>
+        </div>
+        
+        <!-- Pairing Section (shows only if not paired) -->
+        <div id="pairingCard" class="card pairing-section">
+            <h3>🔗 Pair Your WhatsApp Device</h3>
+            <p>To start using the bot, you need to pair your WhatsApp account. You'll receive an 8-character password to access your dashboard.</p>
+            <div class="input-group">
+                <input type="tel" id="phoneNumber" placeholder="Enter phone number (e.g., 255712345678)">
+                <button class="btn btn-primary" onclick="startPairing()">Start Pairing</button>
+            </div>
+            <div id="pairingInfo" style="display: none; margin-top: 20px;">
+                <p>📱 Pairing initiated for: <strong id="pairPhone"></strong></p>
+                <p>🔑 Your 8-character password:</p>
+                <div class="pair-password" id="pairPassword"></div>
+                <p>⚠️ Save this password! You'll need it to login next time.</p>
+                <div id="pairStatus" style="margin-top: 16px;"></div>
+                <button class="btn" style="background: rgba(239,68,68,0.2); color: #ef4444; margin-top: 12px;" onclick="cancelPairing()">Cancel Pairing</button>
+            </div>
+        </div>
+        
+        <!-- Bot Info Section (shows when paired) -->
+        <div id="botInfoCard" class="card" style="display: none;">
+            <h3>🤖 Your Bot Information</h3>
+            <div class="info-row" style="display: flex; justify-content: space-between; padding: 8px 0;">
+                <span>Bot JID:</span>
+                <span id="botJid">-</span>
+            </div>
+            <div class="info-row" style="display: flex; justify-content: space-between; padding: 8px 0;">
+                <span>Paired At:</span>
+                <span id="pairedAt">-</span>
+            </div>
+            <div class="info-row" style="display: flex; justify-content: space-between; padding: 8px 0;">
+                <span>Current Prefix:</span>
+                <span id="currentPrefix">.</span>
+            </div>
+            <div class="info-row" style="display: flex; justify-content: space-between; padding: 8px 0;">
+                <span>Bot Mode:</span>
+                <span id="botMode">public</span>
+            </div>
+            <button class="btn btn-primary" style="margin-top: 16px;" onclick="location.href='/settings'">⚙️ Configure Bot</button>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="card">
+            <h3>📈 Recent Activity</h3>
+            <div id="activityLogs">
+                <p style="color: #64748b; text-align: center; padding: 20px;">Loading activity...</p>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="card">
+            <h3>🔗 Quick Links</h3>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <a href="https://whatsapp.com/channel/0029VbDF0pZCxoB4rvUmnN1e" target="_blank" style="color: #6366f1;">📢 Join Channel</a>
+                <a href="https://chat.whatsapp.com/IS276Wg9zcuCnJRiMDI64g" target="_blank" style="color: #6366f1;">👥 Join Group</a>
+                <a href="/settings" style="color: #6366f1;">⚙️ Bot Settings</a>
+                <a href="/profile" style="color: #6366f1;">👤 My Profile</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const token = localStorage.getItem('sirius_token');
+        if (!token) {
+            window.location.href = '/login';
+        }
+        
+        let currentUser = null;
+        let pairInterval = null;
+        let currentPairId = null;
+        
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (!data.valid) {
+                    localStorage.removeItem('sirius_token');
+                    localStorage.removeItem('sirius_user');
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                currentUser = data.user;
+                document.getElementById('welcomeName').textContent = currentUser.username;
+                document.getElementById('userName').textContent = currentUser.username.charAt(0).toUpperCase();
+                
+                if (currentUser.is_admin) {
+                    document.getElementById('adminLink').style.display = 'inline-block';
+                }
+                
+                if (currentUser.is_paired) {
+                    document.getElementById('pairingCard').style.display = 'none';
+                    document.getElementById('botInfoCard').style.display = 'block';
+                    await loadBotInfo();
+                } else {
+                    document.getElementById('pairingCard').style.display = 'block';
+                    document.getElementById('botInfoCard').style.display = 'none';
+                }
+                
+                await loadDashboardStats();
+                await loadActivityLogs();
+                
+            } catch (error) {
+                console.error('Auth error:', error);
+                window.location.href = '/login';
+            }
+        }
+        
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch('/api/dashboard/stats', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const stats = data.stats;
+                    
+                    if (stats.is_paired) {
+                        const statusHtml = stats.bot_connected ? 
+                            '<span class="status-badge status-connected">✅ Connected</span>' : 
+                            '<span class="status-badge status-disconnected">❌ Disconnected</span>';
+                        document.getElementById('botStatus').innerHTML = statusHtml;
+                    } else {
+                        document.getElementById('botStatus').innerHTML = '<span class="status-badge status-pending">⏳ Not Paired</span>';
+                    }
+                    
+                    document.getElementById('commandsUsed').textContent = stats.commands_used || 0;
+                    document.getElementById('messagesProcessed').textContent = stats.messages_processed || 0;
+                    document.getElementById('uptime').textContent = formatUptime(stats.uptime || 0);
+                }
+            } catch (error) {
+                console.error('Stats error:', error);
+            }
+        }
+        
+        async function loadBotInfo() {
+            try {
+                const response = await fetch('/api/dashboard/stats', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.stats.is_paired) {
+                    document.getElementById('botJid').textContent = data.stats.bot_jid || 'N/A';
+                    document.getElementById('pairedAt').textContent = data.stats.paired_at ? formatDate(data.stats.paired_at) : 'N/A';
+                    document.getElementById('currentPrefix').textContent = data.stats.prefix || '.';
+                    document.getElementById('botMode').textContent = data.stats.bot_mode || 'public';
+                }
+            } catch (error) {
+                console.error('Bot info error:', error);
+            }
+        }
+        
+        async function loadActivityLogs() {
+            try {
+                const response = await fetch('/api/dashboard/activity', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.logs.length > 0) {
+                    const logsHtml = data.logs.map(log => `
+                        <div class="activity-item">
+                            <span class="activity-action">${log.action}</span>
+                            <span class="activity-time">${formatDate(log.created_at)}</span>
+                            <div class="activity-details">${log.details || 'No details'}</div>
+                        </div>
+                    `).join('');
+                    document.getElementById('activityLogs').innerHTML = logsHtml;
+                } else {
+                    document.getElementById('activityLogs').innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No activity yet</p>';
+                }
+            } catch (error) {
+                document.getElementById('activityLogs').innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">Failed to load activity</p>';
+            }
+        }
+        
+        async function startPairing() {
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            
+            if (!phoneNumber || phoneNumber.length < 10) {
+                showToast('Please enter a valid phone number', 'error');
+                return;
+            }
+            
+            showToast('Starting pairing process...', 'info');
+            
+            try {
+                const response = await fetch('/api/pair/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ phone_number: phoneNumber })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentPairId = data.pairId;
+                    document.getElementById('pairPhone').textContent = phoneNumber;
+                    document.getElementById('pairPassword').textContent = data.pairPassword;
+                    document.getElementById('pairingInfo').style.display = 'block';
+                    
+                    showToast(`Pairing started! Your password: ${data.pairPassword}`, 'success');
+                    
+                    if (pairInterval) clearInterval(pairInterval);
+                    pairInterval = setInterval(checkPairStatus, 3000);
+                } else {
+                    showToast(data.error || 'Failed to start pairing', 'error');
+                }
+            } catch (error) {
+                showToast('Network error. Please try again.', 'error');
+            }
+        }
+        
+        async function checkPairStatus() {
+            if (!currentPairId) return;
+            
+            try {
+                const response = await fetch(`/api/pair/status/${currentPairId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.status === 'completed') {
+                    clearInterval(pairInterval);
+                    document.getElementById('pairStatus').innerHTML = `
+                        <div style="background: rgba(16,185,129,0.2); border-radius: 12px; padding: 12px; text-align: center;">
+                            ✅ Device paired successfully!<br>
+                            Username: ${data.username}<br>
+                            Password: ${data.password}<br>
+                            <button class="btn btn-primary" style="margin-top: 12px;" onclick="location.reload()">Refresh Dashboard</button>
+                        </div>
+                    `;
+                    showToast('Device paired successfully!', 'success');
+                } else if (data.status === 'expired') {
+                    clearInterval(pairInterval);
+                    document.getElementById('pairStatus').innerHTML = `
+                        <div style="background: rgba(239,68,68,0.2); border-radius: 12px; padding: 12px; text-align: center; color: #ef4444;">
+                            ❌ Pairing session expired. Please try again.
+                        </div>
+                    `;
+                } else if (data.status === 'failed') {
+                    clearInterval(pairInterval);
+                    document.getElementById('pairStatus').innerHTML = `
+                        <div style="background: rgba(239,68,68,0.2); border-radius: 12px; padding: 12px; text-align: center; color: #ef4444;">
+                            ❌ Pairing failed: ${data.message || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Status check error:', error);
+            }
+        }
+        
+        async function cancelPairing() {
+            if (!currentPairId) return;
+            
+            try {
+                await fetch(`/api/pair/cancel/${currentPairId}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (pairInterval) clearInterval(pairInterval);
+                document.getElementById('pairingInfo').style.display = 'none';
+                document.getElementById('pairStatus').innerHTML = '';
+                currentPairId = null;
+                
+                showToast('Pairing cancelled', 'info');
+            } catch (error) {
+                showToast('Failed to cancel', 'error');
+            }
+        }
+        
+        function formatUptime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            return `${minutes}m`;
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+        
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function logout() {
+            localStorage.removeItem('sirius_token');
+            localStorage.removeItem('sirius_user');
+            window.location.href = '/login';
+        }
+        
+        // Auto refresh every 10 seconds
+        loadUserData();
+        setInterval(() => {
+            if (currentUser && currentUser.is_paired) {
+                loadDashboardStats();
+            }
+        }, 10000);
+    </script>
+</body>
+</html>

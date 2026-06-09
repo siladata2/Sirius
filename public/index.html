@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIRIUS - Pair First, Then Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.8; }
+        }
+        
+        .navbar {
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 16px 32px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #6366f1;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #6366f1;
+            color: #6366f1;
+        }
+        
+        .btn-outline:hover {
+            background: #6366f1;
+            color: white;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: #94a3b8;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        
+        .pair-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 32px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .input-group {
+            margin-bottom: 24px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            color: white;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .pair-result {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        
+        .pair-code {
+            font-family: monospace;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            color: #10b981;
+        }
+        
+        .password-display {
+            font-family: monospace;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 12px 20px;
+            z-index: 1100;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+            border-top: 1px solid rgba(99, 102, 241, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .nav-links { display: none; }
+            .pair-card { margin: 20px; padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">✨ SIRIUS</div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>✨ SIRIUS<br>WhatsApp Bot</h1>
+            <p>First time? Pair your WhatsApp device to get started. Already paired? Login with your phone number and password.</p>
+            
+            <div class="pair-card">
+                <h2 style="margin-bottom: 24px;">🔗 Pair Your Device</h2>
+                <div class="input-group">
+                    <label>📱 WhatsApp Number</label>
+                    <input type="tel" id="phoneNumber" placeholder="e.g., 255712345678">
+                    <small style="color: #64748b; display: block; margin-top: 8px;">Include country code (no + or spaces)</small>
+                </div>
+                <button class="btn btn-primary" id="pairBtn" style="width: 100%;" onclick="startPairing()">
+                    🔗 Start Pairing
+                </button>
+                
+                <div id="pairResult" style="display: none;" class="pair-result">
+                    <div id="pairLoading">
+                        <span class="spinner"></span> Requesting pairing code...
+                    </div>
+                    <div id="pairCodeDisplay" style="display: none;">
+                        <p>📱 Open WhatsApp → Settings → Linked Devices → Link a Device</p>
+                        <div class="pair-code" id="pairCode"></div>
+                        <p>⏳ Enter this code within 10 minutes</p>
+                    </div>
+                    <div id="pairSuccessDisplay" style="display: none;">
+                        <p>✅ Device paired successfully!</p>
+                        <div class="password-display" id="userPassword"></div>
+                        <p>🔑 Save this password! You'll need it to login.</p>
+                        <button class="btn btn-primary" onclick="location.href='/login'" style="margin-top: 16px;">
+                            🔐 Go to Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>© 2024 SIRIUS Bot. All rights reserved. | Pair first, then login</p>
+    </footer>
+    
+    <script>
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = Math.random() * 2 + 1 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+        
+        let pairInterval = null;
+        
+        async function startPairing() {
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            
+            if (!phoneNumber || phoneNumber.length < 10) {
+                showToast('Please enter a valid phone number', 'error');
+                return;
+            }
+            
+            const pairBtn = document.getElementById('pairBtn');
+            const pairResult = document.getElementById('pairResult');
+            const pairLoading = document.getElementById('pairLoading');
+            const pairCodeDisplay = document.getElementById('pairCodeDisplay');
+            const pairSuccessDisplay = document.getElementById('pairSuccessDisplay');
+            
+            pairBtn.disabled = true;
+            pairBtn.innerHTML = '<span class="spinner"></span> Pairing...';
+            pairResult.style.display = 'block';
+            pairLoading.style.display = 'block';
+            pairCodeDisplay.style.display = 'none';
+            pairSuccessDisplay.style.display = 'none';
+            
+            try {
+                const response = await fetch(`/api/pair/start?number=${phoneNumber}`);
+                const data = await response.json();
+                
+                if (data.code) {
+                    // Show pairing code
+                    pairLoading.style.display = 'none';
+                    pairCodeDisplay.style.display = 'block';
+                    document.getElementById('pairCode').textContent = data.code;
+                    
+                    showToast(`Pairing code: ${data.code}`, 'success');
+                    
+                    // Start checking if paired
+                    if (pairInterval) clearInterval(pairInterval);
+                    pairInterval = setInterval(() => checkPairStatus(phoneNumber), 3000);
+                    
+                } else if (data.status === 'already_connected') {
+                    pairLoading.style.display = 'none';
+                    pairSuccessDisplay.style.display = 'block';
+                    document.getElementById('userPassword').textContent = 'Already connected! Login with your password.';
+                    showToast('Device already connected!', 'success');
+                    if (pairInterval) clearInterval(pairInterval);
+                    
+                } else {
+                    showToast(data.error || 'Pairing failed', 'error');
+                    pairBtn.disabled = false;
+                    pairBtn.innerHTML = '🔗 Start Pairing';
+                    pairResult.style.display = 'none';
+                }
+                
+            } catch (error) {
+                showToast('Network error. Please try again.', 'error');
+                pairBtn.disabled = false;
+                pairBtn.innerHTML = '🔗 Start Pairing';
+                pairResult.style.display = 'none';
+            }
+        }
+        
+        async function checkPairStatus(phoneNumber) {
+            try {
+                const response = await fetch(`/api/pair/status?number=${phoneNumber}`);
+                const data = await response.json();
+                
+                if (data.status === 'connected') {
+                    clearInterval(pairInterval);
+                    document.getElementById('pairLoading').style.display = 'none';
+                    document.getElementById('pairCodeDisplay').style.display = 'none';
+                    document.getElementById('pairSuccessDisplay').style.display = 'block';
+                    document.getElementById('userPassword').textContent = data.password || 'Check your WhatsApp for password';
+                    showToast('Device paired successfully!', 'success');
+                    
+                    // Save user info
+                    localStorage.setItem('sirius_user_number', phoneNumber);
+                    localStorage.setItem('sirius_user_password', data.password);
+                }
+            } catch (error) {
+                console.error('Status check error:', error);
+            }
+        }
+        
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
