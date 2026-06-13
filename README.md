@@ -5,7 +5,7 @@ https://dashboard.heroku.com/new?template=https://github.com/Sila-Md/Sirius
 
 # ✨ SIRIUS Multi-User WhatsApp Bot
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/siladata2/sirius)
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/sirius-bot/sirius-md)
 
 ## 🚀 Features
 
